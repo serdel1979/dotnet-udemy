@@ -22,9 +22,9 @@ namespace WebApiAutores.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<LibroDTOres>> getLibro(int id)
         {
-            var libros = await context.Libros.FirstOrDefaultAsync(x => x.id == id);
+            var libro = await context.Libros.FirstOrDefaultAsync(x => x.id == id);
             //return await context.Libros.FirstOrDefaultAsync(x => x.id == id);
-            return mapper.Map<LibroDTOres>(libros);
+            return mapper.Map<LibroDTOres>(libro);
         }
 
         [HttpPost]
