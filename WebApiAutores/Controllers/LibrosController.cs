@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebApiAutores.DTOs;
 using WebApiAutores.Entidades;
 
 namespace WebApiAutores.Controllers
@@ -10,37 +12,41 @@ namespace WebApiAutores.Controllers
     {
 
         private readonly ApplicationDbContext context;
-
-        public LibrosController(ApplicationDbContext context)
+        private readonly IMapper mapper;
+        public LibrosController(ApplicationDbContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
-        //[HttpGet("{id:int}")]
-        //public async Task<ActionResult<Libro>> Get(int id)
-        //{
-        //    return await context.Libros.Include(x => x.Autor).FirstOrDefaultAsync(x=>x.id == id);  
-        //}
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<LibroDTOres>> getLibro(int id)
+        {
+            var libros = await context.Libros.FirstOrDefaultAsync(x => x.id == id);
+            //return await context.Libros.FirstOrDefaultAsync(x => x.id == id);
+            return mapper.Map<LibroDTOres>(libros);
+        }
 
-        //[HttpPost]
-        //public async Task<ActionResult> Post(Libro libro)
-        //{
+        [HttpPost]
+        public async Task<ActionResult> post(LibroDTO libro)
+        {
 
-        //    var existeAutor = await context.Autores.AnyAsync(x => x.id == libro.autor_id);
-        //    if (!existeAutor)
-        //    {
-        //        return BadRequest($"No existe el autor {libro.autor_id}");
-        //    }
+            //var existeautor = await context.autores.anyasync(x => x.id == libro.autor_id);
+            //if (!existeautor)
+            //{
+            //    return badrequest($"no existe el autor {libro.autor_id}");
+            //}
 
-        //    context.Add(libro);
-        //    await context.SaveChangesAsync();
-        //    return Ok();
-        //}
+            var librodto = mapper.Map<Libro>(libro);
+            context.Add(librodto);
+            await context.SaveChangesAsync();
+            return Ok();
+        }
 
 
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult> Put(Libro libro, int id)
+        public async Task<ActionResult> Put(LibroDTOres libro, int id)
         {
 
             if (libro.id != id)
@@ -69,7 +75,7 @@ namespace WebApiAutores.Controllers
                 return NotFound();
             }
 
-            context.Remove(new Libro() { id = id });
+            context.Remove(new LibroDTOres() { id = id });
             await context.SaveChangesAsync();
             return Ok();
         }

@@ -20,8 +20,8 @@ namespace WebApiAutores
             services.AddDbContext<ApplicationDbContext>( options 
                 => options.UseNpgsql(Configuration.GetConnectionString("defaultConnection")));
 
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        services.AddEndpointsApiExplorer();
+            services.AddAutoMapper(typeof(StartUp));
+            services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
         }
 
