@@ -22,8 +22,14 @@ namespace WebApiAutores.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<LibroDTOres>> getLibro(int id)
         {
-            var libro = await context.Libros.FirstOrDefaultAsync(x => x.id == id);
-            //return await context.Libros.FirstOrDefaultAsync(x => x.id == id);
+            var libro = await context.Libros
+                .Include(librodb => librodb.AutoresLibros)  
+                .ThenInclude(autorLibroDb=> autorLibroDb.Autor)
+                .FirstOrDefaultAsync(x => x.id == id);
+            if (libro == null)
+            {
+                return NotFound();
+            }
             return mapper.Map<LibroDTOres>(libro);
         }
 
@@ -31,13 +37,31 @@ namespace WebApiAutores.Controllers
         public async Task<ActionResult> post(LibroDTO libro)
         {
 
-            //var existeautor = await context.autores.anyasync(x => x.id == libro.autor_id);
-            //if (!existeautor)
-            //{
-            //    return badrequest($"no existe el autor {libro.autor_id}");
-            //}
+            if(libro.AutoresIds == null)
+            {
+                return BadRequest("No se puede crear un libro sin autores");
+            }
+
+            var autoresIds = await context.Autores
+                .Where(autorbd=> libro.AutoresIds.Contains(autorbd.id)).Select(x=>x.id)
+                .ToListAsync();
+
+            if (libro.AutoresIds.Count != autoresIds.Count)
+            {
+                return BadRequest("Error en los autores enviados");
+            }
 
             var librodto = mapper.Map<Libro>(libro);
+
+            if(librodto.AutoresLibros != null)
+            {
+                for(int i=0; i < librodto.AutoresLibros.Count; i++)
+                {
+                    librodto.AutoresLibros[i].orden = i;
+                }
+            }
+
+
             context.Add(librodto);
             await context.SaveChangesAsync();
             return Ok();
@@ -75,7 +99,7 @@ namespace WebApiAutores.Controllers
                 return NotFound();
             }
 
-            context.Remove(new LibroDTOres() { id = id });
+            context.Remove(new Libro() { id = id });
             await context.SaveChangesAsync();
             return Ok();
         }

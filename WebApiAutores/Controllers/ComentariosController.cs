@@ -12,9 +12,9 @@ namespace WebApiAutores.Controllers
     public class ComentariosController: ControllerBase
     {
         private readonly ApplicationDbContext context;
-        private readonly Mapper mapper;
+        private readonly IMapper mapper;
 
-        public ComentariosController(ApplicationDbContext context, Mapper mapper) {
+        public ComentariosController(ApplicationDbContext context, IMapper mapper) {
             this.context = context;
             this.mapper = mapper;
         }
