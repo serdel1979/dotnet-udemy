@@ -30,6 +30,9 @@ namespace WebApiAutores.Controllers
             {
                 return NotFound();
             }
+
+            libro.AutoresLibros = libro.AutoresLibros.OrderBy(x => x.orden).ToList();
+
             return mapper.Map<LibroDTOres>(libro);
         }
 
