@@ -32,7 +32,7 @@ namespace WebApiAutores.Controllers
         //       .FirstOrDefaultAsync(x => x.id == id);
 
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name = "ObtenerAutor")]
         public async Task<ActionResult<AutorDTOConLibros>> Get(int id)
         {
             var autor = await context.Autores
@@ -71,27 +71,31 @@ namespace WebApiAutores.Controllers
 
             context.Add(autor);
             await context.SaveChangesAsync();
-            return Ok();
+
+            var autorDtoRes = mapper.Map<AutorDTOres>(autor);
+
+            return CreatedAtRoute("ObtenerAutor", new { id = autor.id }, autorDtoRes);
         }
 
 
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult> Put(Autor autor, int id)
+        public async Task<ActionResult> Put(AutorDTO autor, int id)
         {
 
-            if (autor.id != id)
-            {
-                return BadRequest("Error de id");
-            }
+            
             var existe = await context.Autores.AnyAsync(x => x.id == id);
             if (!existe)
             {
                 return NotFound();
             }
-            context.Update(autor);
+
+            var autorBD = mapper.Map<Autor>(autor);
+            autorBD.id = id;
+
+            context.Update(autorBD);
             await context.SaveChangesAsync();
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete("{id:int}")]
