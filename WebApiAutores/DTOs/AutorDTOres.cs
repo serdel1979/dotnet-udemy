@@ -10,6 +10,5 @@ namespace WebApiAutores.DTOs
         [StringLength(maximumLength: 120, ErrorMessage = "La longitud máxima es 120!!!")]
         public string nombre { get; set; }
 
-        public List<LibroDTOres> libros { get; set; }
     }
 }
