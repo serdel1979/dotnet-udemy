@@ -8,6 +8,7 @@ namespace WebApiAutores.Entidades
         [Required]
         [StringLength(maximumLength: 100)]
         public string titulo { get; set; }
+        public DateTime? fechaPublicacion { get; set; }
         public List<Comentario> comentarios { get; set; }
 
         public List<AutorLibro> AutoresLibros { get; set; }

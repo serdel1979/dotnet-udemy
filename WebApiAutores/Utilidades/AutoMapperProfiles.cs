@@ -14,6 +14,7 @@ namespace WebApiAutores.Utilidades
             CreateMap<Autor, AutorDTOres>();
             CreateMap<Autor, AutorDTOConLibros>()
                 .ForMember(autoresDTOres => autoresDTOres.libros, opciones => opciones.MapFrom(MapLibrosDeAutores));
+            CreateMap<LibroPatchDTO, Libro>().ReverseMap();
             CreateMap<LibroDTO, Libro>()
                 .ForMember(libro => libro.AutoresLibros, opciones => opciones.MapFrom(MapAutoresLibros));
             CreateMap<Libro, LibroDTOres>();

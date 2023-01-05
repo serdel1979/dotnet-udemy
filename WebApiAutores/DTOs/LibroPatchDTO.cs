@@ -2,13 +2,11 @@
 
 namespace WebApiAutores.DTOs
 {
-    public class LibroDTOres
+    public class LibroPatchDTO
     {
-        public int id { get; set; }
-
         [StringLength(maximumLength: 100)]
+        [Required]
         public string titulo { get; set; }
         public DateTime FechaPublicacion { get; set; }
-
     }
 }
