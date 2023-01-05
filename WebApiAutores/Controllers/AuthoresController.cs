@@ -12,10 +12,12 @@ namespace WebApiAutores.Controllers
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
+        private readonly IConfiguration configuration;
 
-        public AuthoresController(ApplicationDbContext context, IMapper mapper) { 
+        public AuthoresController(ApplicationDbContext context, IMapper mapper, IConfiguration configuration) { 
             this.context = context;
             this.mapper = mapper;
+            this.configuration = configuration;
         }
 
 
@@ -96,6 +98,13 @@ namespace WebApiAutores.Controllers
             context.Update(autorBD);
             await context.SaveChangesAsync();
             return NoContent();
+        }
+
+        [HttpGet("configuraciones")]
+        public ActionResult<string> GetConfiguracion()
+        {
+            //return configuration.GetConnectionString("defaultConnection");  //es equivalente a la linea de abajo
+            return configuration["ConnectionStrings:defaultConnection"];
         }
 
         [HttpDelete("{id:int}")]
