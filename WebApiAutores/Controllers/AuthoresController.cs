@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAutores.DTOs;
@@ -22,6 +24,7 @@ namespace WebApiAutores.Controllers
 
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<List<AutorDTOres>>> Get()
         {
             var autores = await context.Autores.ToListAsync();
@@ -100,12 +103,6 @@ namespace WebApiAutores.Controllers
             return NoContent();
         }
 
-        [HttpGet("configuraciones")]
-        public ActionResult<string> GetConfiguracion()
-        {
-            //return configuration.GetConnectionString("defaultConnection");  //es equivalente a la linea de abajo
-            return configuration["ConnectionStrings:defaultConnection"];
-        }
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
