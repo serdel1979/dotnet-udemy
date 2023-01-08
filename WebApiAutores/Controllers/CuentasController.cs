@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WebApiAutores.DTOs;
+using WebApiAutores.Services;
 
 namespace WebApiAutores.Controllers
 {
@@ -18,17 +19,19 @@ namespace WebApiAutores.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly IConfiguration configuration;
         private readonly SignInManager<IdentityUser> signin;
+        private readonly HashService hashService;
         private readonly IDataProtector dataProtector;
 
         public CuentasController(UserManager<IdentityUser> userManager,
             IConfiguration configuration,
             SignInManager<IdentityUser> signin,
-            IDataProtectionProvider dataProtectionProvider) {
+            IDataProtectionProvider dataProtectionProvider,
+            HashService hashService) {
 
             this.userManager = userManager;
             this.configuration = configuration;
             this.signin = signin;
-
+            this.hashService = hashService;
             dataProtector = dataProtectionProvider.CreateProtector("valor_re_secreto");
         }
 
@@ -64,6 +67,20 @@ namespace WebApiAutores.Controllers
             });
         }
 
+
+
+        [HttpGet("hash/{textoPlano}")]
+        public ActionResult realizarHash(string textoPlano)
+        {
+            var txtHash = hashService.Hash(textoPlano);
+            var txtHash2 = hashService.Hash(textoPlano);
+            return Ok(new
+            {
+                textoPlano = textoPlano,
+                hash = txtHash,
+                hash2 = txtHash2
+            });
+        }
 
         [HttpPost("registrar")]
         public async Task<ActionResult<RespuestaAutenticacion>> Registrar(CredencialUsuario credencialUsuario)

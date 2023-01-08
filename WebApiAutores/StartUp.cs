@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
+using WebApiAutores.Services;
 
 namespace WebApiAutores
 {
@@ -85,7 +86,7 @@ namespace WebApiAutores
             });
 
 
-            services.AddDataProtection();
+            
 
             services.AddCors(opciones =>
             {
@@ -94,6 +95,9 @@ namespace WebApiAutores
                     builder.WithOrigins("https://apirequest.io").AllowAnyMethod().AllowAnyHeader();
                 });
             });
+
+            services.AddDataProtection();
+            services.AddTransient<HashService>();
 
         }
 
