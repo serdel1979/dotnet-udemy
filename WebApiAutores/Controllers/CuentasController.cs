@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,7 +12,7 @@ namespace WebApiAutores.Controllers
 {
     [ApiController]
     [Route("api/users")]
-    public class CuentasController: ControllerBase
+    public class CuentasController : ControllerBase
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly IConfiguration configuration;
@@ -29,9 +31,9 @@ namespace WebApiAutores.Controllers
         public async Task<ActionResult<RespuestaAutenticacion>> Registrar(CredencialUsuario credencialUsuario)
         {
 
-            var usuario = new IdentityUser { 
-                UserName = credencialUsuario.Email, 
-                Email = credencialUsuario.Email 
+            var usuario = new IdentityUser {
+                UserName = credencialUsuario.Email,
+                Email = credencialUsuario.Email
             };
 
             var resultado = await userManager.CreateAsync(usuario, credencialUsuario.Password);
@@ -55,6 +57,21 @@ namespace WebApiAutores.Controllers
             return BadRequest("Login incorrecto");
         }
 
+
+        [HttpGet("renovarToken")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        private ActionResult<RespuestaAutenticacion> renovarToken()
+        {
+
+            var emailClaim = HttpContext.User.Claims.Where(claim => claim.Type == "email").FirstOrDefault();
+            var email = emailClaim.Value;
+            var credencialesUsuario = new CredencialUsuario
+            {
+                Email = email
+            };
+
+            return construirToken(credencialesUsuario);
+        }
 
         private RespuestaAutenticacion construirToken(CredencialUsuario credencialUsuario)
         {
