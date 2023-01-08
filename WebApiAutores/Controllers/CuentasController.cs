@@ -48,6 +48,23 @@ namespace WebApiAutores.Controllers
         }
 
 
+        [HttpGet("encriptarPortiempo")]
+        public ActionResult encriptarPorTiempo()
+        {
+            var porTiempo = dataProtector.ToTimeLimitedDataProtector();
+            var txt = "frase en texto plano";
+            var cifrado = porTiempo.Protect(txt, lifetime: TimeSpan.FromSeconds(5));
+            Thread.Sleep(6000);
+            var descifrado = porTiempo.Unprotect(cifrado);
+            return Ok(new
+            {
+                textoPlano = txt,
+                textoCifrado = cifrado,
+                textoDescifrado = descifrado
+            });
+        }
+
+
         [HttpPost("registrar")]
         public async Task<ActionResult<RespuestaAutenticacion>> Registrar(CredencialUsuario credencialUsuario)
         {
