@@ -84,13 +84,14 @@ namespace WebApiAutores
                 opciones.AddPolicy("EsAdmin", politica => politica.RequireClaim("esAdmin"));
             });
 
+
             services.AddDataProtection();
 
             services.AddCors(opciones =>
             {
                 opciones.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins("").AllowAnyMethod().AllowAnyHeader();
+                    builder.WithOrigins("https://apirequest.io").AllowAnyMethod().AllowAnyHeader();
                 });
             });
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -17,15 +18,35 @@ namespace WebApiAutores.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly IConfiguration configuration;
         private readonly SignInManager<IdentityUser> signin;
+        private readonly IDataProtector dataProtector;
 
         public CuentasController(UserManager<IdentityUser> userManager,
             IConfiguration configuration,
-            SignInManager<IdentityUser> signin) {
+            SignInManager<IdentityUser> signin,
+            IDataProtectionProvider dataProtectionProvider) {
 
             this.userManager = userManager;
             this.configuration = configuration;
             this.signin = signin;
+
+            dataProtector = dataProtectionProvider.CreateProtector("valor_re_secreto");
         }
+
+
+        [HttpGet("encriptar")]
+        public ActionResult encriptar()
+        {
+            var txt = "frase en texto plano";
+            var cifrado = dataProtector.Protect(txt);
+            var descifrado = dataProtector.Unprotect(cifrado);
+            return Ok(new
+            {
+                textoPlano = txt,
+                textoCifrado = cifrado,
+                textoDescifrado = descifrado
+            });
+        }
+
 
         [HttpPost("registrar")]
         public async Task<ActionResult<RespuestaAutenticacion>> Registrar(CredencialUsuario credencialUsuario)
