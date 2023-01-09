@@ -26,7 +26,7 @@ namespace WebApiAutores.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet(Name = "ObtenerComentariosDeUnLibro")]
         public async Task<ActionResult<List<ComentarioDTOres>>> Get(int idLibro)
         {
             var comentarios = await context.Comentarios.Where(x => x.idLibro == idLibro).ToListAsync();
@@ -48,7 +48,7 @@ namespace WebApiAutores.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost(Name = "CreaComentarioDeUnLibro")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> Post(int libroId, ComentarioDTO comentarioDto)
         {
@@ -74,7 +74,7 @@ namespace WebApiAutores.Controllers
         }
 
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int}", Name = "EditaComentario")]
         public async Task<ActionResult> Put(int libroId, int id, ComentarioDTO comentarioDto)
         {
             var libro = await context.Libros.AnyAsync(libroBD => libroBD.id == libroId);

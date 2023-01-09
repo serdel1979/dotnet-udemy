@@ -37,7 +37,7 @@ namespace WebApiAutores.Controllers
             return mapper.Map<LibroDTOConAutores>(libro);
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CrearLibro")]
         public async Task<ActionResult> post(LibroDTO libro)
         {
 
@@ -69,7 +69,7 @@ namespace WebApiAutores.Controllers
 
 
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int}", Name = "EditaUnLibro")]
         public async Task<ActionResult> Put(LibroDTO libroDTO, int id)
         {
 
@@ -104,7 +104,7 @@ namespace WebApiAutores.Controllers
 
 
 
-        [HttpPatch("{id:int}")]
+        [HttpPatch("{id:int}", Name = "PatchLibro")]
         public async Task<ActionResult> Patch(int id, JsonPatchDocument<LibroPatchDTO> patchDocument)
         {
             if(patchDocument == null)
@@ -145,7 +145,7 @@ namespace WebApiAutores.Controllers
 
 
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int}", Name = "BorraLibro")]
         public async Task<ActionResult> Delete(int id)
         {
 

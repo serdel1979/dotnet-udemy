@@ -24,7 +24,7 @@ namespace WebApiAutores.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet(Name = "ObtenerAutores")]
         [AllowAnonymous]    //<-- permite consultar sin estar autenticado
         public async Task<ActionResult<List<AutorDTOres>>> Get()
         {
@@ -54,7 +54,7 @@ namespace WebApiAutores.Controllers
             return mapper.Map<AutorDTOConLibros>(autor);
         }
 
-        [HttpGet("{nombre}")]
+        [HttpGet("{nombre}", Name = "ObtenerAutorPorNombre")]
         public async Task<ActionResult<List<AutorDTOres>>> Get(string nombre)
         {
             var autores = await context.Autores.Where(x => x.nombre.Contains(nombre)).ToListAsync();
@@ -63,7 +63,7 @@ namespace WebApiAutores.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost(Name = "CrearrAutor")]
         public async Task<ActionResult> Post(AutorDTO autorDto)
         {
 
@@ -85,7 +85,7 @@ namespace WebApiAutores.Controllers
 
 
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int}", Name = "EditarAutor")]
         public async Task<ActionResult> Put(AutorDTO autor, int id)
         {
 
@@ -105,7 +105,7 @@ namespace WebApiAutores.Controllers
         }
 
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int}", Name = "EliminarAutor")]
         public async Task<ActionResult> Delete(int id)
         {
 

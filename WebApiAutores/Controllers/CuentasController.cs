@@ -36,7 +36,7 @@ namespace WebApiAutores.Controllers
         }
 
 
-        [HttpGet("encriptar")]
+        [HttpGet("encriptar", Name = "EncriptaUnaFrase")]
         public ActionResult encriptar()
         {
             var txt = "frase en texto plano";
@@ -51,7 +51,7 @@ namespace WebApiAutores.Controllers
         }
 
 
-        [HttpGet("encriptarPortiempo")]
+        [HttpGet("encriptarPortiempo", Name = "EncriptaFraseEnUnTiempo")]
         public ActionResult encriptarPorTiempo()
         {
             var porTiempo = dataProtector.ToTimeLimitedDataProtector();
@@ -69,7 +69,7 @@ namespace WebApiAutores.Controllers
 
 
 
-        [HttpGet("hash/{textoPlano}")]
+        [HttpGet("hash/{textoPlano}", Name = "HashDeTextoPlano")]
         public ActionResult realizarHash(string textoPlano)
         {
             var txtHash = hashService.Hash(textoPlano);
@@ -82,7 +82,7 @@ namespace WebApiAutores.Controllers
             });
         }
 
-        [HttpPost("registrar")]
+        [HttpPost("registrar", Name = "RegistraUnUsuario")]
         public async Task<ActionResult<RespuestaAutenticacion>> Registrar(CredencialUsuario credencialUsuario)
         {
 
@@ -100,7 +100,7 @@ namespace WebApiAutores.Controllers
         }
 
 
-        [HttpPost("login")]
+        [HttpPost("login", Name = "Login")]
         public async Task<ActionResult<RespuestaAutenticacion>> login(CredencialUsuario credencialUsuario)
         {
             var resultado = await signin.PasswordSignInAsync(credencialUsuario.Email, credencialUsuario.Password,
@@ -113,7 +113,7 @@ namespace WebApiAutores.Controllers
         }
 
 
-        [HttpGet("renovarToken")]
+        [HttpGet("renovarToken", Name = "RenuevaToken")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<RespuestaAutenticacion>> renovarToken()
         {
@@ -155,7 +155,7 @@ namespace WebApiAutores.Controllers
 
         }
 
-        [HttpPost("hacerAdmin")]
+        [HttpPost("hacerAdmin", Name = "HacerAdmin")]
         public async Task<ActionResult<RespuestaAutenticacion>> hacerAdmin(EditarAdminDTO editarAdminDTO)
         {
             var usuario = await userManager.FindByEmailAsync(editarAdminDTO.Email);
@@ -164,7 +164,7 @@ namespace WebApiAutores.Controllers
             return NoContent();
         }
 
-        [HttpPost("borrarAdmin")]
+        [HttpPost("borrarAdmin", Name = "EliminarAdmin")]
         public async Task<ActionResult<RespuestaAutenticacion>> borrarAdmin(EditarAdminDTO editarAdminDTO)
         {
             var usuario = await userManager.FindByEmailAsync(editarAdminDTO.Email);
