@@ -93,7 +93,7 @@ namespace WebApiAutores
                 opciones.AddDefaultPolicy(builder =>
                 {
                     builder.WithOrigins("https://apirequest.io").AllowAnyMethod().AllowAnyHeader()
-                    .WithExposedHeaders(new string[] { "porpagina" });
+                    .WithExposedHeaders(new string[] { "total-registros" });
 
                 });
             });

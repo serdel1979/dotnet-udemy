@@ -12,7 +12,7 @@ namespace WebApiAutores.Entidades
             }
 
             double cantidad = await queryable.CountAsync();
-            httpContext.Response.Headers.Add("porpagina", cantidad.ToString());
+            httpContext.Response.Headers.Add("total-registros", cantidad.ToString());
         }
     }
 }
