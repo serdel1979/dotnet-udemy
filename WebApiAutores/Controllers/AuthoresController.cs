@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAutores.DTOs;
 using WebApiAutores.Entidades;
+using WebApiAutores.Utilidades;
 
 namespace WebApiAutores.Controllers
 {
@@ -26,15 +27,13 @@ namespace WebApiAutores.Controllers
 
         [HttpGet(Name = "ObtenerAutores")]
         [AllowAnonymous]    //<-- permite consultar sin estar autenticado
-        public async Task<ActionResult<List<AutorDTOres>>> Get()
+        public async Task<ActionResult<List<AutorDTOres>>> Get([FromQuery] PaginacionDTO paginacionDTO)
         {
-            var autores = await context.Autores.ToListAsync();
-            var dtos = mapper.Map<List<AutorDTOres>>(autores);
+            var queryable = context.Autores.AsQueryable();
+            await HttpContext.paginationHeader(queryable);
 
-            dtos.ForEach(dto => GenerarEnlaces(dto));
-
-            return dtos;
-
+            var autores = await queryable.OrderBy(autor => autor.nombre).Paginar(paginacionDTO).ToListAsync();
+            return mapper.Map<List<AutorDTOres>>(autores);
         }
 
         //var libro = await context.Libros
