@@ -2,7 +2,7 @@
 
 namespace WebApiAutores.DTOs
 {
-    public class AutorDTOres
+    public class AutorDTOres: Recurso
     {
         public int id { get; set; }
 

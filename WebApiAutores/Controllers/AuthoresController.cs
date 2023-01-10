@@ -29,7 +29,12 @@ namespace WebApiAutores.Controllers
         public async Task<ActionResult<List<AutorDTOres>>> Get()
         {
             var autores = await context.Autores.ToListAsync();
-            return mapper.Map<List<AutorDTOres>>(autores);
+            var dtos = mapper.Map<List<AutorDTOres>>(autores);
+
+            dtos.ForEach(dto => GenerarEnlaces(dto));
+
+            return dtos;
+
         }
 
         //var libro = await context.Libros
@@ -51,7 +56,37 @@ namespace WebApiAutores.Controllers
                 return NotFound();
             }
 
-            return mapper.Map<AutorDTOConLibros>(autor);
+            var dto = mapper.Map<AutorDTOConLibros>(autor);
+            GenerarEnlaces(dto);
+            return dto;
+        }
+
+
+        private void GenerarEnlaces(AutorDTOres autorDto)
+        {
+            autorDto.recursos.Add(new DatoHATEOAS(
+                enlace: Url.Link("ObtenerAutor", 
+                new {id= autorDto.id }),
+                    descripcion: "obtener un autor",
+                    metodo:"GET"
+                )
+                );
+
+            autorDto.recursos.Add(new DatoHATEOAS(
+               enlace: Url.Link("EditarAutor",
+               new { id = autorDto.id }),
+                   descripcion: "Editar un autor",
+                   metodo: "PUT"
+               )
+               );
+
+            autorDto.recursos.Add(new DatoHATEOAS(
+               enlace: Url.Link("EliminarAutor",
+               new { id = autorDto.id }),
+                   descripcion: "Eliminar un autor",
+                   metodo: "DELETE"
+               )
+               );
         }
 
         [HttpGet("{nombre}", Name = "ObtenerAutorPorNombre")]
@@ -63,7 +98,7 @@ namespace WebApiAutores.Controllers
         }
 
 
-        [HttpPost(Name = "CrearrAutor")]
+        [HttpPost(Name = "CrearAutor")]
         public async Task<ActionResult> Post(AutorDTO autorDto)
         {
 
